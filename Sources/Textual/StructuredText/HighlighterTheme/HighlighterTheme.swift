@@ -8,9 +8,9 @@ extension StructuredText {
   ///
   /// You can set a highlighter theme using the ``TextualNamespace/highlighterTheme(_:)`` modifier.
   public struct HighlighterTheme: Hashable, Sendable {
-    let foregroundColor: DynamicColor
-    let backgroundColor: DynamicColor
-    let tokenProperties: [TokenType: AnyTextProperty]
+    public let foregroundColor: DynamicColor
+    public let backgroundColor: DynamicColor
+    public let tokenProperties: [TokenType: AnyTextProperty]
 
     /// Creates a highlighter theme.
     ///
