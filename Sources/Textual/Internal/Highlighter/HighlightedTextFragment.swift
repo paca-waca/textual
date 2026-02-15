@@ -52,8 +52,13 @@ extension HighlightedTextFragment {
   @MainActor @Observable final class Model {
     var tokens: [CodeToken] = []
     var highlightedCode: AttributedString?
+    
+    private var isReady = false
 
     func tokenize(content: AttributedSubstring, languageHint: String?) async {
+      isReady = false
+      defer { isReady = true }
+      
       let code = String(content.characters[...])
       tokens = [CodeToken(content: code, type: .plain)]
 
@@ -68,6 +73,8 @@ extension HighlightedTextFragment {
       using theme: StructuredText.HighlighterTheme,
       environment: TextEnvironmentValues
     ) {
+      guard isReady else { return }
+      
       var attributes = AttributeContainer()
       // Re-apply the presentation intent for pasteboard formatters
       attributes.presentationIntent = presentationIntent

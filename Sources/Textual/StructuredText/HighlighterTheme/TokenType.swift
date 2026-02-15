@@ -88,4 +88,7 @@ extension StructuredText.HighlighterTheme.TokenType {
   public static let omit: Self = "omit"
   public static let interpolation: Self = "interpolation"
   public static let interpolationPunctuation: Self = "interpolation-punctuation"
+  
+  // Openclaw
+  public static let openclaw: Self = "openclaw-command"
 }

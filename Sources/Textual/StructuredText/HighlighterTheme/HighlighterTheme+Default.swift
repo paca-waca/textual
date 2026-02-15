@@ -56,6 +56,8 @@ extension StructuredText.HighlighterTheme {
       // Diff
       .inserted: AnyTextProperty(.foregroundColor(.codeInserted)),
       .deleted: AnyTextProperty(.foregroundColor(.codeDeleted)),
+      // Shell
+      .openclaw: AnyTextProperty(.foregroundColor(.command))
     ]
   )
 }
@@ -139,5 +141,10 @@ extension DynamicColor {
   fileprivate static let codeDeleted = DynamicColor(
     light: Color(red: 1, green: 0.219608, blue: 0.235294),
     dark: Color(red: 1, green: 0.258824, blue: 0.270588)
+  )
+  
+  fileprivate static let command = DynamicColor(
+    light: Color(red: 0.5, green: 1.0, blue: 0.58),
+    dark: Color(red: 0.5, green: 1.0, blue: 0.58)
   )
 }

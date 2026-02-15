@@ -23,6 +23,7 @@ struct CodeToken: Hashable, Sendable {
   actor CodeTokenizer {
     private let context: JSContext
     private let logger = Logger(category: .codeTokenizer)
+    private var isReady = false
 
     static let shared = CodeTokenizer()
 
@@ -45,6 +46,19 @@ struct CodeToken: Hashable, Sendable {
 
       context.evaluateScript(script)
       self.context = context
+      
+      Task {
+        await setup()
+      }
+    }
+    
+    func setup() {
+      guard let tokenizeCode = context.objectForKeyedSubscript("loadCustomTokens") else {
+        return
+      }
+      
+      let result = tokenizeCode.call(withArguments: [])
+      _ = result
     }
 
     func tokenize(code: String, language: String) -> [CodeToken] {

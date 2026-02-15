@@ -13,7 +13,7 @@ extension Logger {
   }
 
   private enum Constants {
-    static let subsystem = "com.github.gonzalezreal.Textual"
+    static let subsystem = "com.github.paca-waca.Textual"
     static let defaultsKey = "\(subsystem).Debug"
   }
 
