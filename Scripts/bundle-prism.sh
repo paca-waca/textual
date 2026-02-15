@@ -14,7 +14,7 @@ TEMP_DIR=$(mktemp -d)
 echo "📦 Bundling Prism.js and language definitions..."
 
 # Prism CDN base URL (minified files)
-PRISM_VERSION="1.29.0"
+PRISM_VERSION="1.30.0"
 PRISM_CDN="https://cdnjs.cloudflare.com/ajax/libs/prism/$PRISM_VERSION"
 
 # Core Prism (required)
@@ -78,6 +78,7 @@ LANGUAGES=(
   # Shell & system
   "bash"
   "powershell"
+  "shell-session"
 
   # Data & config
   "json"
@@ -147,6 +148,37 @@ done
 
 # Add helper function for token flattening
 cat >> "$TEMP_DIR/bundle.js" << 'EOF'
+
+// Add custom tokens
+function loadCustomTokens() {
+  try {
+    if (!Prism || !Prism.languages || !Prism.languages.bash) {
+      return false;
+    }
+
+    if (Prism.languages.bash['openclaw-command']) {
+      return true;
+    }
+
+    if (Prism.languages.insertBefore) {
+      Prism.languages.insertBefore('bash', 'function', {
+        'openclaw-command': {
+          pattern: /\bopenclaw\b/,
+          alias: 'command'
+        }
+      });
+    } else {
+      Prism.languages.bash['openclaw-command'] = {
+        pattern: /\bopenclaw\b/,
+        alias: 'command'
+      };
+    }
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 // Helper function to flatten Prism tokens into simple objects
 function flattenPrismTokens(tokens) {
