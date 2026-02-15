@@ -23,7 +23,11 @@ struct CodeToken: Hashable, Sendable {
   actor CodeTokenizer {
     private let context: JSContext
     private let logger = Logger(category: .codeTokenizer)
-    private var isReady = false
+    
+    private let tokenizer: JSValue
+    private let loader: JSValue
+    
+    private var isLoaded = false
 
     static let shared = CodeTokenizer()
 
@@ -47,24 +51,24 @@ struct CodeToken: Hashable, Sendable {
       context.evaluateScript(script)
       self.context = context
       
-      Task {
-        await setup()
+      guard let loader = context.objectForKeyedSubscript("loadCustomTokens") else {
+        logger.error("Prism JavaScript `loadCustomTokens` function is missing.")
+        return nil
       }
-    }
-    
-    func setup() {
-      guard let tokenizeCode = context.objectForKeyedSubscript("loadCustomTokens") else {
-        return
-      }
+      self.loader = loader
       
-      let result = tokenizeCode.call(withArguments: [])
-      _ = result
+      guard let tokenizer = context.objectForKeyedSubscript("tokenizeCode") else {
+        logger.error("Prism JavaScript `tokenizeCode` function is missing.")
+        return nil
+      }
+      self.tokenizer = tokenizer
     }
 
     func tokenize(code: String, language: String) -> [CodeToken] {
+      setup()
+      
       guard
-        let tokenizeCode = context.objectForKeyedSubscript("tokenizeCode"),
-        let result = tokenizeCode.call(withArguments: [code, language]),
+        let result = tokenizer.call(withArguments: [code, language]),
         let array = result.toArray() as? [[String: String]]
       else {
         logger.error("Tokenization failed.")
@@ -79,6 +83,17 @@ struct CodeToken: Hashable, Sendable {
           return nil
         }
         return CodeToken(content: content, type: .init(rawValue: type))
+      }
+    }
+    
+    private func setup() {
+      guard !isLoaded else { return }
+      defer { isLoaded = true }
+      
+      if let isLoaded = loader.call(withArguments: []), isLoaded.toBool() {
+        logger.info("Custom tokens is already loaded.")
+      } else {
+        logger.error("Tokenization failed.")
       }
     }
   }
