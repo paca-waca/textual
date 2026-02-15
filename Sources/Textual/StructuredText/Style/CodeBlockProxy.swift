@@ -15,24 +15,38 @@ extension StructuredText {
     /// Textual writes both a plain-text and an HTML representation when possible.
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
-    public func copyToPasteboard() {
+    public func copyToPasteboard(_ types: Set<UTType> = [.plainText]) {
       #if TEXTUAL_ENABLE_TEXT_SELECTION && canImport(AppKit)
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
 
         let formatter = Formatter(AttributedString(content))
-        pasteboard.setString(formatter.plainText(), forType: .string)
+        types.forEach {
+          switch $0 {
+          case .plainText:
+            pasteboard.setString(formatter.plainText(), forType: .string)
+          case .html:
+            pasteboard.setString(formatter.html(), forType: .html)
+          default:
+            assertionFailure("Unsupported UTType for code block pasteboard")
+          }
+        }
+        
         pasteboard.setString(formatter.html(), forType: .html)
       #elseif TEXTUAL_ENABLE_TEXT_SELECTION && canImport(UIKit)
         let formatter = Formatter(AttributedString(content))
-        UIPasteboard.general.setItems(
-          [
-            [
-              UTType.plainText.identifier: formatter.plainText(),
-              UTType.html.identifier: formatter.html(),
-            ]
-          ]
-        )
+        let itemsToCopy = types.reduce(into: [String: Any]()) { acc, val in
+          switch val {
+          case .plainText:
+            acc[UTType.plainText.identifier] = formatter.plainText()
+          case .html:
+            acc[UTType.html.identifier] = formatter.html()
+          default:
+            assertionFailure("Unsupported UTType for code block pasteboard")
+          }
+        }
+      
+        UIPasteboard.general.setItems([itemsToCopy])
       #endif
     }
   }
