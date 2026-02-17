@@ -25,6 +25,7 @@ extension StructuredText {
             languageHint: languageHint,
             theme: highlighterTheme
           )
+          .modifier(TextSelectionInteraction())
         ),
         indentationLevel: indentationLevel,
         languageHint: languageHint,

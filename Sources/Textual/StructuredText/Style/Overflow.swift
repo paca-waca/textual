@@ -69,8 +69,6 @@ public struct Overflow<Content: View>: View {
             .onGeometryChange(for: CGFloat.self, of: \.size.height) {
               contentHeight = $0
             }
-            // Make text selection local in scrollable regions
-            .modifier(TextSelectionInteraction())
             .transformPreference(Text.LayoutKey.self) { value in
               value = []
             }
