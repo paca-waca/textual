@@ -15,7 +15,10 @@ extension StructuredText {
     /// Textual writes both a plain-text and an HTML representation when possible.
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
-    public func copyToPasteboard(_ types: Set<UTType> = [.plainText]) {
+    public func copyToPasteboard(
+      _ types: Set<UTType> = [.plainText],
+      localOnly: Bool = false
+    ) {
       #if TEXTUAL_ENABLE_TEXT_SELECTION && canImport(AppKit)
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
@@ -46,7 +49,13 @@ extension StructuredText {
           }
         }
       
-        UIPasteboard.general.setItems([itemsToCopy])
+      UIPasteboard.general.setItems(
+        [itemsToCopy],
+        options: [
+          .localOnly: localOnly
+        ]
+      )
+        
       #endif
     }
   }
