@@ -70,14 +70,20 @@
       guard let selectedRange = model.selectedRange else {
         return
       }
+      defer {
+        model.selectedRange = nil
+      }
 
       let attributedText = model.attributedText(in: selectedRange)
       let formatter = Formatter(attributedText)
 
+      let plainText = formatter.plainText()
+      
       UIPasteboard.general.setItems(
         [
           [
-            UTType.plainText.identifier: formatter.plainText(),
+            UTType.utf8PlainText.identifier: plainText,
+            UTType.plainText.identifier: plainText,
             UTType.html.identifier: formatter.html(),
           ]
         ]
@@ -110,6 +116,7 @@
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
       let location = gesture.location(in: self)
       guard let url = model.url(for: location) else {
+        model.selectedRange = nil
         return
       }
       openURL(url)

@@ -30,7 +30,7 @@ let package = Package(
         .process("Internal/Highlighter/Prism")
       ],
       swiftSettings: [
-//        .define("TEXTUAL_ENABLE_LINKS", .when(platforms: [.macOS, .iOS, .watchOS, .visionOS])),
+        .define("TEXTUAL_ENABLE_LINKS", .when(platforms: [.macOS, .iOS, .watchOS, .visionOS])),
         .define("TEXTUAL_ENABLE_TEXT_SELECTION", .when(platforms: [.macOS, .iOS, .visionOS])),
       ]
     ),
