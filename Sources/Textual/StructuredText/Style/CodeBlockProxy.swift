@@ -16,7 +16,7 @@ extension StructuredText {
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
     public func copyToPasteboard(
-      _ types: Set<UTType> = [.plainText],
+      _ types: Set<UTType> = [.utf8PlainText],
       localOnly: Bool = false
     ) {
       #if TEXTUAL_ENABLE_TEXT_SELECTION && canImport(AppKit)
@@ -26,7 +26,7 @@ extension StructuredText {
         let formatter = Formatter(AttributedString(content))
         types.forEach {
           switch $0 {
-          case .plainText:
+          case .plainText, .utf8PlainText:
             pasteboard.setString(formatter.plainText(), forType: .string)
           case .html:
             pasteboard.setString(formatter.html(), forType: .html)
@@ -42,6 +42,8 @@ extension StructuredText {
           switch val {
           case .plainText:
             acc[UTType.plainText.identifier] = formatter.plainText()
+          case .utf8PlainText:
+            acc[UTType.utf8PlainText.identifier] = formatter.plainText()
           case .html:
             acc[UTType.html.identifier] = formatter.html()
           default:
