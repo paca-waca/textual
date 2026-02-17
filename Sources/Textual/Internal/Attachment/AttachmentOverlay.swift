@@ -26,7 +26,7 @@ struct AttachmentOverlay: ViewModifier {
               origin: geometry[anchoredLayout.origin],
               layout: anchoredLayout.layout
             )
-          }
+          }.allowsHitTesting(false)
         }
       }
   }
