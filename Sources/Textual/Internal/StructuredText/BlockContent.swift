@@ -63,7 +63,6 @@ extension StructuredText {
           .modifier(TextSelectionInteraction())
       case .table(let columns):
         Table(intent: intent, content: content, columns: columns)
-          .modifier(TextSelectionInteraction())
       default:
         Paragraph(content)
           .modifier(TextSelectionInteraction())
