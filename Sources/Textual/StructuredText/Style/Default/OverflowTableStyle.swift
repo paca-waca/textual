@@ -24,12 +24,22 @@ extension StructuredText {
         configuration.label
           .fixedSize(horizontal: false, vertical: true)
           .frame(maxWidth: maxWidth, alignment: .leading)
+          .textual.tableBackground { layout in
+            Canvas { context, _ in
+              for bounds in layout.evenRowBounds {
+                context.fill(
+                  Path(bounds.integral),
+                  with: .style(DynamicColor.gitHubSecondaryBackground)
+                )
+              }
+            }
+          }
           .textual.tableOverlay { layout in
             Canvas { context, _ in
               for divider in layout.dividers() {
                 context.fill(
                   Path(divider),
-                  with: .style(DynamicColor.grayTertiary)
+                  with: .style(DynamicColor.gitHubBorder)
                 )
               }
             }
@@ -39,6 +49,15 @@ extension StructuredText {
       .textual.tableCellSpacing(horizontal: Self.borderWidth, vertical: Self.borderWidth)
       .textual.blockSpacing(.fontScaled(top: 1.6, bottom: 1.6))
     }
+  }
+}
+
+extension StructuredText.TableLayout {
+  fileprivate var evenRowBounds: [CGRect] {
+    rowIndices
+      .dropFirst()
+      .filter { $0.isMultiple(of: 2) }
+      .map { rowBounds($0) }
   }
 }
 
