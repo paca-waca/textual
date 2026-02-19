@@ -20,11 +20,13 @@
           (layout == start)
           ? localCharacterIndex(at: range.start)
           : 0
-        let upperBound =
+        var upperBound =
           (layout == end)
           ? localCharacterIndex(at: range.end)
           : attributedString.length
 
+        upperBound = min(upperBound, attributedString.length)
+        
         if lowerBound < upperBound {
           attributedText.append(
             attributedString.attributedSubstring(
