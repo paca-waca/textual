@@ -118,6 +118,7 @@ public struct StructuredText: View {
   public var body: some View {
     WithAttachments(attributedString) {
       BlockContent(content: $0)
+        .modifier(TextSelectionInteraction())
         .modifier(TextSelectionCoordination())
     }
     .coordinateSpace(.textContainer)

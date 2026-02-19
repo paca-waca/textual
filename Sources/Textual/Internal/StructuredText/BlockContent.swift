@@ -37,35 +37,26 @@ extension StructuredText {
       switch intent?.kind {
       case .paragraph where content.isMathBlock:
         MathBlock(content)
-          .modifier(TextSelectionInteraction())
       case .paragraph:
         Paragraph(content)
-          .modifier(TextSelectionInteraction())
       case .header(let level):
         Heading(content, level: level)
-          .modifier(TextSelectionInteraction())
       case .orderedList:
         OrderedList(intent: intent, content: content)
-          .modifier(TextSelectionInteraction())
       case .unorderedList:
         UnorderedList(intent: intent, content: content)
-          .modifier(TextSelectionInteraction())
       case .codeBlock(let languageHint) where languageHint?.lowercased() == "math":
         MathCodeBlock(content)
-          .modifier(TextSelectionInteraction())
       case .codeBlock(let languageHint):
         CodeBlock(content, languageHint: languageHint)
       case .blockQuote:
         BlockQuote(intent: intent, content: content)
-          .modifier(TextSelectionInteraction())
       case .thematicBreak:
         ThematicBreak(content)
-          .modifier(TextSelectionInteraction())
       case .table(let columns):
         Table(intent: intent, content: content, columns: columns)
       default:
         Paragraph(content)
-          .modifier(TextSelectionInteraction())
       }
     }
   }

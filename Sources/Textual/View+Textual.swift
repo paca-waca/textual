@@ -283,4 +283,10 @@ extension TextualNamespace where Base: View {
       .environment(\.tableCellStyle, style.tableCellStyle)
       .environment(\.thematicBreakStyle, style.thematicBreakStyle)
   }
+  
+  /// Propogate gesture exclusion area
+  @MainActor
+  public func textSelectionExclusion() -> some View {
+    base.textSelectionExclusion()
+  }
 }

@@ -77,17 +77,22 @@ public struct Overflow<Content: View>: View {
       .onScrollGeometryChange(for: CGFloat.self, of: \.containerSize.width) {
         containerWidth = $1
       }
-      // Propagate gesture exclusion area
-      .background(
-        GeometryReader { geometry in
-          Color.clear
-            .preference(
-              key: OverflowFrameKey.self,
-              value: [geometry.frame(in: .textContainer)]
-            )
-        }
-      )
+      .textSelectionExclusion()
     }
+  }
+}
+
+extension View {
+  // Propagate gesture exclusion area
+  func textSelectionExclusion() -> some View {
+    background(
+      GeometryReader { g in
+        Color.clear.preference(
+          key: OverflowFrameKey.self,
+          value: [g.frame(in: .textContainer)]
+        )
+      }
+    )
   }
 }
 
